@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jurnal Keuangan Pernikahan — Cashflow Bersama</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Nunito (Playful Rounded) & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        cream: {
+                            50: '#FFFDF9',
+                            100: '#FAF8F5',
+                            200: '#F3EFEA',
+                            300: '#E6DFD5',
+                        },
+                        charcoal: {
+                            DEFAULT: '#2D2A32',
+                            muted: '#686370',
+                            light: '#9892A1'
+                        },
+                        pastel: {
+                            mint: '#E2F4EC',
+                            mintDark: '#3B9E75',
+                            mintBorder: '#BCE3D2',
+                            peach: '#FFE8E2',
+                            peachDark: '#E56B55',
+                            peachBorder: '#F9C8BC',
+                            lavender: '#EFEAFF',
+                            lavenderDark: '#7C62D6',
+                            lavenderBorder: '#D5C9FA',
+                            butter: '#FFF6D6',
+                            butterDark: '#D19317',
+                            butterBorder: '#F5E09B',
+                            sky: '#E3F2FD',
+                            skyDark: '#3B8AC4',
+                            skyBorder: '#BCE0FA',
+                        }
+                    },
+                    boxShadow: {
+                        'soft-pop': '0 6px 0 rgba(45, 42, 50, 0.05)',
+                        'soft-pop-sm': '0 4px 0 rgba(45, 42, 50, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FFFDF9;
+            background-image: radial-gradient(#EAE3D9 1px, transparent 1px);
+            background-size: 24px 24px;
+            color: #2D2A32;
+            -webkit-font-smoothing: antialiased;
+        }
+        /* Custom subtle scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFFDF9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #DFD7CC;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #C7BDB0;
+        }
+        .tab-active {
+            background-color: #EFEAFF;
+            color: #7C62D6;
+            border: 2px solid #D5C9FA;
+            font-weight: 700;
+            box-shadow: 0 3px 0 rgba(124, 98, 214, 0.12);
+        }
+        .btn-pop {
+            transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease;
+        }
+        .btn-pop:active {
+            transform: translateY(2px);
+            box-shadow: none !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-pastel-lavender selection:text-pastel-lavenderDark">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-cream-50/90 backdrop-blur-sm z-50 flex flex-col items-center justify-center transition-opacity duration-300">
+        <div class="w-14 h-14 rounded-3xl bg-pastel-peach border-2 border-pastel-peachBorder flex items-center justify-center text-2xl animate-bounce mb-3 shadow-soft-pop-sm">
+            💍
+        </div>
+        <p class="font-display text-base font-bold text-charcoal">Menyiapkan ruang cinta...</p>
+    </div>
+
+    <!-- SCREEN 1: ONBOARDING / JOIN WORKSPACE -->
+    <div id="onboarding-screen" class="hidden min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white border-2 border-cream-300 rounded-[28px] p-6 sm:p-8 shadow-soft-pop">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-14 h-14 rounded-2xl bg-pastel-peach border-2 border-pastel-peachBorder flex items-center justify-center text-2xl shadow-soft-pop-sm">
+                    💍
+                </div>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pastel-butter border border-pastel-butterBorder text-xs font-bold text-pastel-butterDark">
+                    ✨ Cashflow Pasangan
+                </div>
+            </div>
+            
+            <h1 class="font-display text-2xl sm:text-3xl font-extrabold text-charcoal tracking-tight mb-2">
+                Jurnal Keuangan Pernikahan
+            </h1>
+            <p class="text-sm text-charcoal-muted mb-6 leading-relaxed">
+                Nabung bareng, atur pos vendor, dan pantau cashflow menuju hari bahagia dengan cara yang seru & transparan! 🐷💕
+            </p>
+
+            <!-- User Profile Setup -->
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-xs font-bold text-charcoal-muted uppercase tracking-wider mb-1.5">
+                        Nama Panggilan Kamu
+                    </label>
+                    <input type="text" id="setup-user-name" placeholder="Contoh: Raka atau Nadya" 
+                        class="w-full px-4 py-3 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm font-medium focus:outline-none focus:border-pastel-lavenderDark focus:bg-white transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-charcoal-muted uppercase tracking-wider mb-1.5">
+                        Peran Kamu
+                    </label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button" onclick="selectRole('Calon Pria')" id="role-pria" 
+                            class="role-btn btn-pop py-3 px-3 rounded-2xl border-2 border-pastel-skyBorder bg-pastel-sky text-pastel-skyDark text-sm font-bold flex items-center justify-center gap-2 shadow-soft-pop-sm">
+                            <span>🤵‍♂️</span> Calon Pria
+                        </button>
+                        <button type="button" onclick="selectRole('Calon Wanita')" id="role-wanita" 
+                            class="role-btn btn-pop py-3 px-3 rounded-2xl border-2 border-cream-300 bg-white text-charcoal-muted text-sm font-bold flex items-center justify-center gap-2">
+                            <span>👰‍♀️</span> Calon Wanita
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t-2 border-dashed border-cream-200 pt-6 space-y-4">
+                <!-- Option A: Create New Room -->
+                <button onclick="handleCreateWorkspace()" 
+                    class="btn-pop w-full py-3.5 px-4 rounded-2xl bg-pastel-mintDark hover:bg-[#328A65] text-white font-display font-bold text-base flex items-center justify-center gap-2 shadow-[0_5px_0_#2A7354]">
+                    <span>✨</span>
+                    Buat Ruang Pernikahan Baru
+                </button>
+
+                <div class="relative flex py-1 items-center">
+                    <div class="flex-grow border-t-2 border-cream-200"></div>
+                    <span class="flex-shrink mx-3 text-xs font-bold text-charcoal-light uppercase tracking-wider">atau gabung pasangan</span>
+                    <div class="flex-grow border-t-2 border-cream-200"></div>
+                </div>
+
+                <!-- Option B: Join Existing Room -->
+                <div class="flex gap-2">
+                    <input type="text" id="join-room-code" placeholder="Kode Ruang (NIKAH-XXXX)" 
+                        class="flex-1 px-4 py-3 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm font-bold uppercase tracking-wider focus:outline-none focus:border-pastel-lavenderDark focus:bg-white transition-colors">
+                    <button onclick="handleJoinWorkspace()" 
+                        class="btn-pop px-5 py-3 rounded-2xl bg-pastel-lavenderDark hover:bg-[#6A50C4] text-white font-display font-bold text-sm shadow-[0_5px_0_#5941AD] whitespace-nowrap">
+                        Gabung 💌
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: MAIN APPLICATION -->
+    <div id="app-screen" class="hidden flex-1 flex flex-col">
+        
+        <!-- Top Navigation Header -->
+        <header class="bg-white/95 backdrop-blur-md border-b-2 border-cream-200 sticky top-0 z-30">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-[72px] flex items-center justify-between gap-3">
+                <!-- Brand & Couple Title -->
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-pastel-peach border-2 border-pastel-peachBorder flex items-center justify-center text-lg sm:text-xl shrink-0 shadow-soft-pop-sm">
+                        💌
+                    </div>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-1.5">
+                            <h1 id="header-couple-title" class="font-display font-extrabold text-base sm:text-xl text-charcoal truncate">
+                                Jurnal Pernikahan
+                            </h1>
+                            <button onclick="openSettingsModal()" class="p-1.5 text-charcoal-muted hover:text-pastel-lavenderDark rounded-xl hover:bg-pastel-lavender transition-colors" title="Pengaturan Target & Pasangan">
+                                <i data-lucide="settings-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <p id="header-countdown" class="text-xs font-medium text-charcoal-muted truncate">
+                            Menghitung hari menuju akad...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Actions: Room Code & User Badge -->
+                <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+                    <!-- Room Code Pill -->
+                    <button onclick="copyRoomCode()" class="btn-pop flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-pastel-butter hover:bg-[#FCEEBE] border-2 border-pastel-butterBorder text-xs font-bold text-pastel-butterDark transition-colors" title="Klik untuk salin kode ruang pasangan">
+                        <span class="w-2 h-2 rounded-full bg-pastel-mintDark animate-ping"></span>
+                        <span class="hidden sm:inline">Kode:</span>
+                        <span id="header-room-code" class="font-mono font-extrabold">---</span>
+                        <i data-lucide="copy" class="w-3.5 h-3.5 ml-0.5"></i>
+                    </button>
+
+                    <!-- Active User Pill -->
+                    <button onclick="openProfileSwitchModal()" class="btn-pop flex items-center gap-2 px-3 py-1.5 rounded-full bg-pastel-lavender hover:bg-[#E4DCFF] border-2 border-pastel-lavenderBorder text-xs font-bold text-pastel-lavenderDark transition-colors">
+                        <span id="header-user-avatar" class="w-5 h-5 rounded-full bg-pastel-lavenderDark text-white flex items-center justify-center text-[10px] font-extrabold">
+                            A
+                        </span>
+                        <span id="header-user-name" class="max-w-[75px] sm:max-w-[120px] truncate">Pengguna</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sub-navigation Pill Tabs -->
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex gap-2 overflow-x-auto no-scrollbar border-t border-cream-200/70 bg-cream-50/60">
+                <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn tab-active px-4 py-2 rounded-full text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-1.5">
+                    <span>🏡</span> Ringkasan Cashflow
+                </button>
+                <button onclick="switchTab('ledger')" id="tab-ledger" class="tab-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold text-charcoal-muted hover:bg-cream-200/70 border-2 border-transparent whitespace-nowrap transition-all flex items-center gap-1.5">
+                    <span>📒</span> Buku Kas & Transaksi
+                </button>
+                <button onclick="switchTab('budget')" id="tab-budget" class="tab-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold text-charcoal-muted hover:bg-cream-200/70 border-2 border-transparent whitespace-nowrap transition-all flex items-center gap-1.5">
+                    <span>🍰</span> Alokasi Pos Anggaran
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            
+            <!-- Quick Action Bar -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h2 id="page-heading" class="font-display text-xl sm:text-2xl font-extrabold text-charcoal">Ringkasan Keuangan ✨</h2>
+                    <p id="page-subheading" class="text-xs sm:text-sm text-charcoal-muted">Pantau progres tabungan dan komitmen pembayaran vendor secara real-time.</p>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <button onclick="openTransactionModal('pemasukan')" class="btn-pop flex-1 sm:flex-initial px-4 py-2.5 rounded-2xl bg-pastel-mintDark hover:bg-[#328A65] text-white font-display text-sm font-bold flex items-center justify-center gap-2 shadow-[0_4px_0_#2A7354]">
+                        <span>🐷</span>
+                        <span>Catat Tabungan</span>
+                    </button>
+                    <button onclick="openTransactionModal('pengeluaran')" class="btn-pop flex-1 sm:flex-initial px-4 py-2.5 rounded-2xl bg-pastel-peachDark hover:bg-[#D15A45] text-white font-display text-sm font-bold flex items-center justify-center gap-2 shadow-[0_4px_0_#B34734]">
+                        <span>🛍️</span>
+                        <span>Catat Pengeluaran</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- VIEW 1: RINGKASAN CASHFLOW (OVERVIEW) -->
+            <div id="view-overview" class="space-y-6">
+                
+                <!-- Hero Target Progress Card (Pastel Lavender & Mint Accent) -->
+                <div class="bg-white border-2 border-pastel-lavenderBorder rounded-[28px] p-5 sm:p-7 shadow-soft-pop relative overflow-hidden">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-4">
+                        <div>
+                            <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                <span class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-pastel-lavenderDark bg-pastel-lavender border border-pastel-lavenderBorder px-3 py-1 rounded-full">
+                                    💍 Target Dana Pernikahan
+                                </span>
+                                <span class="inline-flex items-center gap-1 text-xs font-bold text-pastel-mintDark bg-pastel-mint border border-pastel-mintBorder px-3 py-1 rounded-full">
+                                    🏡 Estimasi 50 Tamu • Konsep Intimate Rumahan
+                                </span>
+                                <button onclick="openSettingsModal()" class="text-xs font-bold text-charcoal-muted hover:text-pastel-lavenderDark underline">
+                                    Ubah Target
+                                </button>
+                            </div>
+                            <div class="flex flex-wrap items-baseline gap-2.5 mt-2">
+                                <span id="metric-total-saved" class="font-display text-3xl sm:text-4xl font-extrabold text-charcoal">Rp 0</span>
+                                <span class="text-sm font-medium text-charcoal-muted">dari <strong id="metric-target-goal" class="font-bold text-charcoal">Rp 15.000.000</strong></span>
+                            </div>
+                        </div>
+                        <div class="text-left md:text-right">
+                            <span id="metric-progress-percent" class="font-display text-3xl font-extrabold text-pastel-mintDark">0%</span>
+                            <p id="metric-remaining-goal" class="text-xs font-semibold text-charcoal-muted">Kurang Rp 15.000.000 lagi</p>
+                        </div>
+                    </div>
+
+                    <!-- Thick Capsule Progress Bar -->
+                    <div class="w-full h-5 bg-cream-100 border-2 border-cream-300 rounded-full overflow-hidden p-0.5">
+                        <div id="metric-progress-bar" class="h-full bg-gradient-to-r from-[#5EC296] to-[#3B9E75] rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center justify-between gap-2 mt-3.5 text-xs text-charcoal-muted">
+                        <span>💡 Dihitung dari total tabungan masuk (termasuk dana yang sudah dibayarkan ke vendor).</span>
+                        <span id="metric-commitment-note" class="font-bold text-pastel-lavenderDark bg-pastel-lavender px-3 py-1 rounded-full">Total Rencana Biaya: Rp 0</span>
+                    </div>
+                </div>
+
+                <!-- 4 Key Pastel Metric Cards Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Card 1: Total Pemasukan (Pastel Mint) -->
+                    <div class="bg-pastel-mint border-2 border-pastel-mintBorder rounded-3xl p-5 shadow-soft-pop-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-extrabold text-pastel-mintDark uppercase tracking-wider">Total Tabungan</span>
+                            <div class="w-9 h-9 rounded-2xl bg-white border border-pastel-mintBorder flex items-center justify-center text-lg">
+                                🐷
+                            </div>
+                        </div>
+                        <p id="card-total-income" class="font-display text-xl font-extrabold text-charcoal mb-1">Rp 0</p>
+                        <p id="card-income-count" class="text-xs font-semibold text-pastel-mintDark">0 kali setoran tabungan</p>
+                    </div>
+
+                    <!-- Card 2: Pengeluaran Terbayar (Pastel Peach) -->
+                    <div class="bg-pastel-peach border-2 border-pastel-peachBorder rounded-3xl p-5 shadow-soft-pop-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-extrabold text-pastel-peachDark uppercase tracking-wider">Sudah Dibayar</span>
+                            <div class="w-9 h-9 rounded-2xl bg-white border border-pastel-peachBorder flex items-center justify-center text-lg">
+                                🧾
+                            </div>
+                        </div>
+                        <p id="card-paid-expense" class="font-display text-xl font-extrabold text-pastel-peachDark mb-1">Rp 0</p>
+                        <p id="card-paid-count" class="text-xs font-semibold text-pastel-peachDark/80">0 transaksi DP / Lunas</p>
+                    </div>
+
+                    <!-- Card 3: Tagihan / Rencana Belum Dibayar (Pastel Butter Yellow) -->
+                    <div class="bg-pastel-butter border-2 border-pastel-butterBorder rounded-3xl p-5 shadow-soft-pop-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-extrabold text-pastel-butterDark uppercase tracking-wider">Sisa Rencana</span>
+                            <div class="w-9 h-9 rounded-2xl bg-white border border-pastel-butterBorder flex items-center justify-center text-lg">
+                                ⏳
+                            </div>
+                        </div>
+                        <p id="card-unpaid-expense" class="font-display text-xl font-extrabold text-pastel-butterDark mb-1">Rp 0</p>
+                        <p id="card-unpaid-count" class="text-xs font-semibold text-pastel-butterDark/80">0 pos belum dibayar</p>
+                    </div>
+
+                    <!-- Card 4: Saldo Kas Tersedia Saat Ini (Pastel Sky Blue) -->
+                    <div class="bg-pastel-sky border-2 border-pastel-skyBorder rounded-3xl p-5 shadow-soft-pop-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-extrabold text-pastel-skyDark uppercase tracking-wider">Saldo Kas Riil</span>
+                            <div class="w-9 h-9 rounded-2xl bg-white border border-pastel-skyBorder flex items-center justify-center text-lg">
+                                👛
+                            </div>
+                        </div>
+                        <p id="card-net-cash" class="font-display text-xl font-extrabold text-charcoal mb-1">Rp 0</p>
+                        <p class="text-xs font-semibold text-pastel-skyDark">Uang siap pakai di rekening</p>
+                    </div>
+                </div>
+
+                <!-- Two Column Section: Partner Contribution & Recent Activity -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- Partner Contribution Breakdown (5 cols) -->
+                    <div class="lg:col-span-5 bg-white border-2 border-cream-300 rounded-[28px] p-5 sm:p-6 shadow-soft-pop flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-lg">💑</span>
+                                <h3 class="font-display font-extrabold text-base text-charcoal">Kontribusi Tabungan Pasangan</h3>
+                            </div>
+                            <p class="text-xs text-charcoal-muted mb-5">Perbandingan setoran dana masuk dari kamu dan pasangan.</p>
+
+                            <div class="space-y-4">
+                                <!-- Partner 1 (Pastel Sky Blue) -->
+                                <div class="p-3.5 rounded-2xl bg-pastel-sky/50 border border-pastel-skyBorder">
+                                    <div class="flex justify-between items-center text-sm mb-2">
+                                        <span class="font-bold text-charcoal flex items-center gap-2">
+                                            <span>🤵‍♂️</span>
+                                            <span id="label-partner-1">Calon Pria</span>
+                                        </span>
+                                        <span id="val-partner-1" class="font-display font-extrabold text-pastel-skyDark">Rp 0 (0%)</span>
+                                    </div>
+                                    <div class="w-full h-3 bg-white border border-pastel-skyBorder rounded-full overflow-hidden">
+                                        <div id="bar-partner-1" class="h-full bg-pastel-skyDark rounded-full transition-all duration-500" style="width: 0%"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Partner 2 (Pastel Peach) -->
+                                <div class="p-3.5 rounded-2xl bg-pastel-peach/50 border border-pastel-peachBorder">
+                                    <div class="flex justify-between items-center text-sm mb-2">
+                                        <span class="font-bold text-charcoal flex items-center gap-2">
+                                            <span>👰‍♀️</span>
+                                            <span id="label-partner-2">Calon Wanita</span>
+                                        </span>
+                                        <span id="val-partner-2" class="font-display font-extrabold text-pastel-peachDark">Rp 0 (0%)</span>
+                                    </div>
+                                    <div class="w-full h-3 bg-white border border-pastel-peachBorder rounded-full overflow-hidden">
+                                        <div id="bar-partner-2" class="h-full bg-pastel-peachDark rounded-full transition-all duration-500" style="width: 0%"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Bersama / Hadiah / Lainnya (Pastel Butter) -->
+                                <div class="p-3.5 rounded-2xl bg-pastel-butter/50 border border-pastel-butterBorder">
+                                    <div class="flex justify-between items-center text-sm mb-2">
+                                        <span class="font-bold text-charcoal flex items-center gap-2">
+                                            <span>🎁</span>
+                                            <span>Tabungan Bersama / Hadiah</span>
+                                        </span>
+                                        <span id="val-partner-joint" class="font-display font-extrabold text-pastel-butterDark">Rp 0 (0%)</span>
+                                    </div>
+                                    <div class="w-full h-3 bg-white border border-pastel-butterBorder rounded-full overflow-hidden">
+                                        <div id="bar-partner-joint" class="h-full bg-pastel-butterDark rounded-full transition-all duration-500" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-4 border-t-2 border-dashed border-cream-200 flex items-center justify-between text-xs text-charcoal-muted">
+                            <span>Bagikan Kode Ruang agar bisa catat bareng!</span>
+                            <button onclick="copyRoomCode()" class="px-3 py-1.5 rounded-full bg-pastel-lavender text-pastel-lavenderDark font-bold hover:bg-[#E2D8FF] shrink-0 ml-2">
+                                Salin Kode
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recent Transactions (7 cols) -->
+                    <div class="lg:col-span-7 bg-white border-2 border-cream-300 rounded-[28px] p-5 sm:p-6 shadow-soft-pop">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-lg">✨</span>
+                                    <h3 class="font-display font-extrabold text-base text-charcoal">Aktivitas Terbaru</h3>
+                                </div>
+                                <p class="text-xs text-charcoal-muted">5 pencatatan terakhir di ruang pernikahan kalian</p>
+                            </div>
+                            <button onclick="switchTab('ledger')" class="px-3 py-1.5 rounded-full bg-cream-100 hover:bg-cream-200 text-xs font-bold text-charcoal flex items-center gap-1 transition-colors">
+                                Lihat Semua <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+
+                        <div id="recent-transactions-list" class="divide-y-2 divide-dashed divide-cream-200">
+                            <!-- Populated by JS -->
+                            <div class="py-10 text-center text-sm text-charcoal-muted">
+                                Belum ada catatan transaksi. Yuk mulai catat tabungan atau DP vendor pertama kalian! 🐷✨
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- VIEW 2: BUKU KAS & TRANSAKSI (LEDGER) -->
+            <div id="view-ledger" class="hidden space-y-5">
+                
+                <!-- Filter & Search Controls -->
+                <div class="bg-white border-2 border-cream-300 rounded-3xl p-4 shadow-soft-pop-sm flex flex-col md:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <i data-lucide="search" class="w-4 h-4 text-charcoal-light absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="filter-search" oninput="renderLedger()" placeholder="Cari nama vendor, deskripsi, atau pencatat..." 
+                            class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm font-medium focus:outline-none focus:border-pastel-lavenderDark focus:bg-white">
+                    </div>
+                    <div class="grid grid-cols-2 sm:flex gap-2">
+                        <select id="filter-type" onchange="renderLedger()" class="px-3.5 py-2.5 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm font-semibold text-charcoal focus:outline-none focus:border-pastel-lavenderDark">
+                            <option value="all">Semua Jenis</option>
+                            <option value="pemasukan">🐷 Pemasukan (+)</option>
+                            <option value="pengeluaran">🛍️ Pengeluaran (-)</option>
+                        </select>
+                        <select id="filter-status" onchange="renderLedger()" class="px-3.5 py-2.5 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm font-semibold text-charcoal focus:outline-none focus:border-pastel-lavenderDark">
+                            <option value="all">Semua Status</option>
+                            <option value="Lunas">✅ Lunas</option>
+                            <option value="DP">⏳ DP (Uang Muka)</option>
+                            <option value="Rencana">📝 Rencana</option>
+                        </select>
+                        <select id="filter-category" onchange="renderLedger()" class="col-span-2 sm:col-span-1 px-3.5 py-2.5 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm font-semibold text-charcoal focus:outline-none focus:border-pastel-lavenderDark">
+                            <option value="all">Semua Kategori</option>
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Transactions Table / Card List -->
+                <div class="bg-white border-2 border-cream-300 rounded-[28px] overflow-hidden shadow-soft-pop">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b-2 border-cream-200 bg-pastel-lavender/40 text-[11px] font-extrabold uppercase tracking-wider text-charcoal-muted">
+                                    <th class="py-4 px-4 sm:px-6">Tanggal & Deskripsi</th>
+                                    <th class="py-4 px-4 hidden md:table-cell">Kategori</th>
+                                    <th class="py-4 px-4 hidden sm:table-cell">Dicatat Oleh</th>
+                                    <th class="py-4 px-4">Status (Klik Ubah)</th>
+                                    <th class="py-4 px-4 text-right">Nominal</th>
+                                    <th class="py-4 px-4 sm:px-6 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ledger-table-body" class="divide-y divide-cream-200 text-sm">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="ledger-empty-state" class="hidden py-14 px-4 text-center">
+                        <div class="w-14 h-14 rounded-3xl bg-pastel-butter border-2 border-pastel-butterBorder text-2xl flex items-center justify-center mx-auto mb-3 shadow-soft-pop-sm">
+                            📒
+                        </div>
+                        <p class="font-display font-extrabold text-base text-charcoal">Belum ada catatan yang cocok</p>
+                        <p class="text-xs text-charcoal-muted mt-1">Coba ubah filter pencarian atau tambahkan transaksi baru.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 3: ALOKASI POS ANGGARAN (BUDGET VS ACTUAL) -->
+            <div id="view-budget" class="hidden space-y-6">
+                
+                <!-- Summary Banner -->
+                <div class="bg-pastel-lavender/60 border-2 border-pastel-lavenderBorder rounded-[28px] p-5 sm:p-6 shadow-soft-pop-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex flex-wrap items-center gap-2 mb-1">
+                            <h3 class="font-display font-extrabold text-base sm:text-lg text-charcoal">🍰 Alokasi Anggaran Intimate Rumahan</h3>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white border border-pastel-lavenderBorder text-[11px] font-extrabold text-pastel-lavenderDark">
+                                👥 50 Tamu • Katering Rumahan
+                            </span>
+                        </div>
+                        <p class="text-xs text-charcoal-muted mt-0.5">Estimasi logis total Rp 15.000.000 dengan katering prasmanan rumahan, dekorasi rumah, dan kebutuhan inti.</p>
+                    </div>
+                    <div class="flex items-center gap-4 bg-white px-4 py-3 rounded-2xl border-2 border-pastel-lavenderBorder shrink-0 shadow-soft-pop-sm">
+                        <div>
+                            <span class="block text-[11px] font-bold text-charcoal-muted uppercase">Total Pagu Pos</span>
+                            <span id="budget-total-allocated" class="font-display font-extrabold text-sm sm:text-base text-charcoal">Rp 0</span>
+                        </div>
+                        <div class="h-8 w-0.5 bg-cream-200"></div>
+                        <div>
+                            <span class="block text-[11px] font-bold text-charcoal-muted uppercase">Total Terpakai</span>
+                            <span id="budget-total-used" class="font-display font-extrabold text-sm sm:text-base text-pastel-peachDark">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Grid -->
+                <div id="budget-categories-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL: TAMBAH / EDIT TRANSAKSI -->
+    <div id="transaction-modal" class="hidden fixed inset-0 bg-charcoal/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white w-full max-w-lg rounded-t-[28px] sm:rounded-[28px] border-2 border-cream-300 shadow-xl overflow-hidden">
+            <div class="px-6 py-4 bg-cream-100 border-b-2 border-cream-200 flex items-center justify-between">
+                <h3 id="tx-modal-title" class="font-display font-extrabold text-lg text-charcoal">Catat Transaksi ✨</h3>
+                <button onclick="closeTransactionModal()" class="p-1.5 rounded-xl bg-white border border-cream-300 text-charcoal-muted hover:text-charcoal">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="transaction-form" onsubmit="handleSaveTransaction(event)" class="p-6 space-y-4 max-h-[85vh] overflow-y-auto">
+                <input type="hidden" id="tx-id">
+
+                <!-- Jenis Transaksi Toggle -->
+                <div class="grid grid-cols-2 gap-2 p-1.5 bg-cream-100 rounded-2xl border-2 border-cream-200">
+                    <button type="button" id="btn-type-pemasukan" onclick="setTxType('pemasukan')" 
+                        class="py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-1.5">
+                        <span>🐷</span> Tabungan Masuk
+                    </button>
+                    <button type="button" id="btn-type-pengeluaran" onclick="setTxType('pengeluaran')" 
+                        class="py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-1.5">
+                        <span>🛍️</span> Biaya Vendor
+                    </button>
+                </div>
+
+                <!-- Nominal -->
+                <div>
+                    <label class="block text-xs font-bold text-charcoal-muted uppercase tracking-wider mb-1.5">Nominal (Rp)</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-display font-extrabold text-charcoal-muted">Rp</span>
+                        <input type="text" id="tx-amount" required inputmode="numeric" placeholder="0" oninput="formatRupiahInput(this)"
+                            class="w-full pl-11 pr-4 py-3 rounded-2xl bg-cream-100 border-2 border-cream-300 font-display text-xl font-extrabold text-charcoal focus:outline-none focus:border-pastel-lavenderDark focus:bg-white">
+                    </div>
+                </div>
+
+                <!-- Deskripsi / Nama Vendor -->
+                <div>
+                    <label id="tx-desc-label" class="block text-xs font-bold text-charcoal-muted uppercase tracking-wider mb-1.5">Nama Vendor / Keterangan</label>
+                    <input type="text" id="tx-desc" required placeholder="Contoh: DP Gedung Serbaguna atau Setoran Gaji"
+                        class="w-full px-4 py-3 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm font-medium focus:outline-none focus:border-pastel-lavenderDark focus:bg-white">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Kategori -->
+                    <div>
+                        <label class="block text-xs font-bold text-charcoal-muted uppercase tracking-wider mb-1.5">Kategori</label>
+                        <select id="tx-category" required class="w-full px-3.5 py-3 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm font-semibold text-charcoal focus:outline-none focus:border-pastel-lavenderDark focus:bg-white">
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+
+                    <!-- Tanggal -->
+                    <div>
+                        <label class="block text-xs font-bold text-charcoal-muted uppercase tracking-wider mb-1.5">Tanggal</label>
+                        <input type="date" id="tx-date" required
+                            class="w-full px-3.5 py-3 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm font-semibold text-charcoal focus:outline-none focus:border-pastel-lavenderDark focus:bg-white">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Status Pembayaran -->
+                    <div id="tx-status-wrapper">
+                        <label class="block text-xs font-bold text-charcoal-muted uppercase tracking-wider mb-1.5">Status Pembayaran</label>
+                        <select id="tx-status" class="w-full px-3.5 py-3 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm font-semibold text-charcoal focus:outline-none focus:border-pastel-lavenderDark focus:bg-white">
+                            <option value="Lunas">✅ Lunas (Sudah Dibayar)</option>
+                            <option value="DP">⏳ DP (Uang Muka)</option>
+                            <option value="Rencana">📝 Rencana / Belum Bayar</option>
+                        </select>
+                    </div>
+
+                    <!-- Sumber Dana / Dicatat Oleh -->
+                    <div>
+                        <label id="tx-actor-label" class="block text-xs font-bold text-charcoal-muted uppercase tracking-wider mb-1.5">Sumber / Dicatat Oleh</label>
+                        <select id="tx-actor" class="w-full px-3.5 py-3 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm font-semibold text-charcoal focus:outline-none focus:border-pastel-lavenderDark focus:bg-white">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Catatan Tambahan -->
+                <div>
+                    <label class="block text-xs font-bold text-charcoal-muted uppercase tracking-wider mb-1.5">Catatan Tambahan (Opsional)</label>
+                    <input type="text" id="tx-notes" placeholder="Misal: Termin ke-1 dari 3, jatuh tempo bulan depan"
+                        class="w-full px-4 py-3 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm focus:outline-none focus:border-pastel-lavenderDark focus:bg-white">
+                </div>
+
+                <div class="pt-3 flex items-center justify-end gap-2.5">
+                    <button type="button" onclick="closeTransactionModal()" class="px-4 py-2.5 rounded-2xl border-2 border-cream-300 text-sm font-bold text-charcoal-muted hover:bg-cream-100">
+                        Batal
+                    </button>
+                    <button type="submit" id="tx-submit-btn" class="btn-pop px-6 py-2.5 rounded-2xl bg-pastel-mintDark text-white font-display text-sm font-bold shadow-[0_4px_0_#2A7354]">
+                        Simpan Catatan ✨
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: PENGATURAN TARGET & PROFIL PERNIKAHAN -->
+    <div id="settings-modal" class="hidden fixed inset-0 bg-charcoal/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-[28px] border-2 border-cream-300 shadow-xl overflow-hidden">
+            <div class="px-6 py-4 bg-pastel-lavender/50 border-b-2 border-cream-200 flex items-center justify-between">
+                <h3 class="font-display font-extrabold text-lg text-charcoal">⚙️ Pengaturan Pernikahan</h3>
+                <button onclick="closeSettingsModal()" class="p-1.5 rounded-xl bg-white border border-cream-300 text-charcoal-muted hover:text-charcoal">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleSaveSettings(event)" class="p-6 space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-charcoal-muted uppercase tracking-wider mb-1.5">🤵‍♂️ Calon Pria</label>
+                        <input type="text" id="set-partner1-name" required placeholder="Calon Pria"
+                            class="w-full px-3.5 py-2.5 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm font-semibold focus:outline-none focus:border-pastel-lavenderDark focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-charcoal-muted uppercase tracking-wider mb-1.5">👰‍♀️ Calon Wanita</label>
+                        <input type="text" id="set-partner2-name" required placeholder="Calon Wanita"
+                            class="w-full px-3.5 py-2.5 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm font-semibold focus:outline-none focus:border-pastel-lavenderDark focus:bg-white">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-charcoal-muted uppercase tracking-wider mb-1.5">💍 Target Total Dana (Rp)</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-display font-extrabold text-charcoal-muted">Rp</span>
+                        <input type="text" id="set-target-amount" required inputmode="numeric" oninput="formatRupiahInput(this)"
+                            class="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-cream-100 border-2 border-cream-300 font-display font-extrabold text-charcoal focus:outline-none focus:border-pastel-lavenderDark focus:bg-white">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-charcoal-muted uppercase tracking-wider mb-1.5">📅 Target Tanggal Pernikahan</label>
+                    <input type="date" id="set-wedding-date"
+                        class="w-full px-3.5 py-2.5 rounded-2xl bg-cream-100 border-2 border-cream-300 text-sm font-semibold text-charcoal focus:outline-none focus:border-pastel-lavenderDark focus:bg-white">
+                </div>
+
+                <!-- Preset Reset Button for Existing Rooms -->
+                <div class="p-3.5 rounded-2xl bg-pastel-mint/60 border border-pastel-mintBorder flex items-center justify-between gap-2">
+                    <div class="text-xs">
+                        <p class="font-extrabold text-pastel-mintDark">🏡 Preset Intimate 15 Juta (50 Tamu)</p>
+                        <p class="text-charcoal-muted">Terapkan target Rp 15 Juta & rincian pos rumahan.</p>
+                    </div>
+                    <button type="button" onclick="applyIntimate15MPreset()" class="btn-pop px-3 py-1.5 rounded-xl bg-pastel-mintDark text-white text-xs font-bold shrink-0 shadow-soft-pop-sm">
+                        Terapkan
+                    </button>
+                </div>
+
+                <div class="pt-3 border-t-2 border-dashed border-cream-200 flex items-center justify-between">
+                    <button type="button" onclick="leaveWorkspace()" class="text-xs text-pastel-peachDark hover:underline font-bold">
+                        Keluar / Ganti Ruang
+                    </button>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="closeSettingsModal()" class="px-4 py-2 rounded-2xl border-2 border-cream-300 text-sm font-bold text-charcoal-muted hover:bg-cream-100">
+                            Batal
+                        </button>
+                        <button type="submit" class="btn-pop px-5 py-2 rounded-2xl bg-pastel-lavenderDark text-white font-display text-sm font-bold shadow-[0_4px_0_#5941AD]">
+                            Simpan
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: EDIT ALOKASI ANGGARAN KATEGORI -->
+    <div id="budget-edit-modal" class="hidden fixed inset-0 bg-charcoal/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[28px] border-2 border-cream-300 shadow-xl overflow-hidden">
+            <div class="px-6 py-4 bg-pastel-butter/60 border-b-2 border-cream-200 flex items-center justify-between">
+                <h3 class="font-display font-extrabold text-base text-charcoal">🍰 Atur Pagu Anggaran</h3>
+                <button onclick="closeBudgetEditModal()" class="p-1.5 rounded-xl bg-white border border-cream-300 text-charcoal-muted hover:text-charcoal">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form onsubmit="handleSaveCategoryBudget(event)" class="p-6 space-y-4">
+                <input type="hidden" id="edit-budget-category-key">
+                <div>
+                    <span id="edit-budget-category-label" class="inline-block px-3 py-1 rounded-full bg-pastel-lavender text-pastel-lavenderDark text-xs font-extrabold mb-3">Kategori</span>
+                    <label class="block text-xs font-bold text-charcoal-muted uppercase tracking-wider mb-1.5">Batas Anggaran Rencana (Rp)</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-display font-extrabold text-charcoal-muted">Rp</span>
+                        <input type="text" id="edit-budget-amount" required inputmode="numeric" oninput="formatRupiahInput(this)"
+                            class="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-cream-100 border-2 border-cream-300 font-display font-extrabold text-charcoal focus:outline-none focus:border-pastel-lavenderDark focus:bg-white">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeBudgetEditModal()" class="px-4 py-2 rounded-2xl border-2 border-cream-300 text-sm font-bold text-charcoal-muted">Batal</button>
+                    <button type="submit" class="btn-pop px-5 py-2 rounded-2xl bg-pastel-mintDark text-white font-display text-sm font-bold shadow-[0_4px_0_#2A7354]">Simpan Pagu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: GANTI IDENTITAS PENGGUNA AKTIF -->
+    <div id="profile-modal" class="hidden fixed inset-0 bg-charcoal/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[28px] border-2 border-cream-300 shadow-xl overflow-hidden p-6">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-display font-extrabold text-base text-charcoal">💕 Siapa yang Sedang Mencatat?</h3>
+                <button onclick="closeProfileSwitchModal()" class="p-1.5 rounded-xl bg-cream-100 text-charcoal-muted hover:text-charcoal">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <p class="text-xs text-charcoal-muted mb-4">Pilih identitas aktif di perangkat ini agar setiap transaksi tercatat dengan benar.</p>
+            <div class="space-y-2.5" id="profile-switch-options">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Application Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, addDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Initialize Firebase using environment variables
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // App State
+        let currentUser = null;
+        let currentRoomCode = null;
+        let currentUserRole = 'Calon Pria'; // 'Calon Pria' or 'Calon Wanita'
+        let currentUserName = '';
+
+        const DEFAULT_INTIMATE_BUDGETS = {
+            'Katering Rumahan & Kue (50 Tamu)': 4000000,
+            'Mahar & Cincin Nikah': 3500000,
+            'Busana Pengantin & MUA': 2500000,
+            'Dekorasi Backdrop Rumahan & Tenda': 1750000,
+            'Dokumentasi (Foto & Video)': 1500000,
+            'Administrasi KUA & Penghulu': 750000,
+            'Souvenir, Undangan Digital & Lainnya': 1000000
+        };
+        
+        let workspaceData = {
+            partner1Name: 'Calon Pria',
+            partner2Name: 'Calon Wanita',
+            targetAmount: 15000000,
+            weddingDate: '',
+            budgets: { ...DEFAULT_INTIMATE_BUDGETS }
+        };
+
+        let transactions = [];
+        let unsubWorkspace = null;
+        let unsubTransactions = null;
+        let activeTxType = 'pemasukan';
+
+        // Categories Configuration (Logical for 50 Guests Intimate Home Wedding - Total 15 Juta)
+        const EXPENSE_CATEGORIES = [
+            'Katering Rumahan & Kue (50 Tamu)',
+            'Mahar & Cincin Nikah',
+            'Busana Pengantin & MUA',
+            'Dekorasi Backdrop Rumahan & Tenda',
+            'Dokumentasi (Foto & Video)',
+            'Administrasi KUA & Penghulu',
+            'Souvenir, Undangan Digital & Lainnya'
+        ];
+
+        const INCOME_CATEGORIES = [
+            'Tabungan Rutin Bulanan',
+            'Setoran Awal / Tabungan Pribadi',
+            'Bonus / THR / Insentif',
+            'Bantuan / Hadiah Keluarga',
+            'Hasil Investasi / Lainnya'
+        ];
+
+        // --- AUTHENTICATION BOOTSTRAP ---
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Auth error:", error);
+                showToast("Gagal menghubungkan autentikasi.", "error");
+            }
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                await checkUserSession();
+            }
+        });
+
+        // Check if user already has a saved room in private Firestore profile
+        async function checkUserSession() {
+            if (!currentUser) return;
+            try {
+                const profileRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'session');
+                const profileSnap = await getDoc(profileRef);
+                
+                if (profileSnap.exists() && profileSnap.data().roomCode) {
+                    const data = profileSnap.data();
+                    currentRoomCode = data.roomCode;
+                    currentUserName = data.userName || 'Pasangan';
+                    currentUserRole = data.userRole || 'Calon Pria';
+                    enterWorkspace(currentRoomCode);
+                } else {
+                    hideLoading();
+                    showOnboarding();
+                }
+            } catch (err) {
+                console.error("Session check error:", err);
+                hideLoading();
+                showOnboarding();
+            }
+        }
+
+        // --- ONBOARDING & WORKSPACE MANAGEMENT ---
+        window.selectRole = function(role) {
+            currentUserRole = role;
+            const btnPria = document.getElementById('role-pria');
+            const btnWanita = document.getElementById('role-wanita');
+            
+            if (role === 'Calon Pria') {
+                btnPria.className = "role-btn btn-pop py-3 px-3 rounded-2xl border-2 border-pastel-skyBorder bg-pastel-sky text-pastel-skyDark text-sm font-bold flex items-center justify-center gap-2 shadow-soft-pop-sm";
+                btnWanita.className = "role-btn btn-pop py-3 px-3 rounded-2xl border-2 border-cream-300 bg-white text-charcoal-muted text-sm font-bold flex items-center justify-center gap-2";
+            } else {
+                btnWanita.className = "role-btn btn-pop py-3 px-3 rounded-2xl border-2 border-pastel-peachBorder bg-pastel-peach text-pastel-peachDark text-sm font-bold flex items-center justify-center gap-2 shadow-soft-pop-sm";
+                btnPria.className = "role-btn btn-pop py-3 px-3 rounded-2xl border-2 border-cream-300 bg-white text-charcoal-muted text-sm font-bold flex items-center justify-center gap-2";
+            }
+        };
+
+        function generateRoomCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = 'NIKAH-';
+            for (let i = 0; i < 4; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        window.handleCreateWorkspace = async function() {
+            if (!currentUser) return;
+            const nameInput = document.getElementById('setup-user-name').value.trim();
+            if (!nameInput) {
+                showToast("Silakan isi nama panggilan Anda terlebih dahulu.", "error");
+                return;
+            }
+
+            showLoading("Membuat ruang pernikahan baru...");
+            const newRoomCode = generateRoomCode();
+            currentUserName = nameInput;
+
+            // Default wedding date: 8 months from now
+            const futureDate = new Date();
+            futureDate.setMonth(futureDate.getMonth() + 8);
+            const defaultDateStr = futureDate.toISOString().split('T')[0];
+
+            const initialWorkspace = {
+                roomCode: newRoomCode,
+                partner1Name: currentUserRole === 'Calon Pria' ? nameInput : 'Calon Pria',
+                partner2Name: currentUserRole === 'Calon Wanita' ? nameInput : 'Calon Wanita',
+                targetAmount: 15000000,
+                weddingDate: defaultDateStr,
+                budgets: { ...DEFAULT_INTIMATE_BUDGETS },
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                // Save public workspace document
+                const wsRef = doc(db, 'artifacts', appId, 'public', 'data', `ws_${newRoomCode}`, 'config');
+                await setDoc(wsRef, initialWorkspace);
+
+                // Seed realistic starter entries for 15 Juta Intimate Home Wedding
+                const txColRef = collection(db, 'artifacts', appId, 'public', 'data', `ws_${newRoomCode}_tx`);
+                const todayStr = new Date().toISOString().split('T')[0];
+                const starterEntries = [
+                    {
+                        type: 'pemasukan',
+                        amount: 5000000,
+                        description: 'Setoran Tabungan Awal Pernikahan',
+                        category: 'Setoran Awal / Tabungan Pribadi',
+                        date: todayStr,
+                        status: 'Lunas',
+                        actor: currentUserRole === 'Calon Wanita' ? 'partner2' : 'partner1',
+                        notes: 'Dana awal tabungan intimate wedding',
+                        loggedBy: currentUserName,
+                        createdAt: new Date(Date.now() - 3000).toISOString()
+                    },
+                    {
+                        type: 'pengeluaran',
+                        amount: 1500000,
+                        description: 'DP Katering Prasmanan Rumahan (50 Porsi)',
+                        category: 'Katering Rumahan & Kue (50 Tamu)',
+                        date: todayStr,
+                        status: 'DP',
+                        actor: 'joint',
+                        notes: 'Estimasi Rp 75rb/porsi termasuk buah, air mineral & snack box',
+                        loggedBy: currentUserName,
+                        createdAt: new Date(Date.now() - 2000).toISOString()
+                    },
+                    {
+                        type: 'pengeluaran',
+                        amount: 600000,
+                        description: 'Biaya Pencatatan Nikah KUA (Luar Kantor)',
+                        category: 'Administrasi KUA & Penghulu',
+                        date: todayStr,
+                        status: 'Rencana',
+                        actor: 'partner1',
+                        notes: 'Akad nikah di rumah, sisa Rp 150rb untuk berkas & fotokopi',
+                        loggedBy: currentUserName,
+                        createdAt: new Date(Date.now() - 1000).toISOString()
+                    }
+                ];
+                for (const entry of starterEntries) {
+                    await addDoc(txColRef, entry);
+                }
+
+                // Save user's private session pointer
+                const profileRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'session');
+                await setDoc(profileRef, {
+                    roomCode: newRoomCode,
+                    userName: currentUserName,
+                    userRole: currentUserRole
+                });
+
+                currentRoomCode = newRoomCode;
+                enterWorkspace(newRoomCode);
+                showToast(`Ruang ${newRoomCode} berhasil dibuat!`);
+            } catch (err) {
+                console.error("Create workspace error:", err);
+                hideLoading();
+                showToast("Gagal membuat ruang pernikahan. Coba lagi.", "error");
+            }
+        };
+
+        window.handleJoinWorkspace = async function() {
+            if (!currentUser) return;
+            const nameInput = document.getElementById('setup-user-name').value.trim();
+            const codeInput = document.getElementById('join-room-code').value.trim().toUpperCase();
+
+            if (!nameInput) {
+                showToast("Silakan isi nama panggilan Anda terlebih dahulu.", "error");
+                return;
+            }
+            if (!codeInput) {
+                showToast("Masukkan Kode Ruang yang dibagikan pasangan Anda.", "error");
+                return;
+            }
+
+            showLoading("Mencari ruang pernikahan...");
+            try {
+                const wsRef = doc(db, 'artifacts', appId, 'public', 'data', `ws_${codeInput}`, 'config');
+                const wsSnap = await getDoc(wsRef);
+
+                if (!wsSnap.exists()) {
+                    hideLoading();
+                    showToast("Kode ruang tidak ditemukan. Periksa kembali kode dari pasangan.", "error");
+                    return;
+                }
+
+                const existingData = wsSnap.data();
+                currentUserName = nameInput;
+
+                // Update partner name in workspace if it was still placeholder
+                const updates = {};
+                if (currentUserRole === 'Calon Pria' && existingData.partner1Name === 'Calon Pria') {
+                    updates.partner1Name = nameInput;
+                } else if (currentUserRole === 'Calon Wanita' && existingData.partner2Name === 'Calon Wanita') {
+                    updates.partner2Name = nameInput;
+                }
+                if (Object.keys(updates).length > 0) {
+                    await updateDoc(wsRef, updates);
+                }
+
+                // Save user session
+                const profileRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'session');
+                await setDoc(profileRef, {
+                    roomCode: codeInput,
+                    userName: currentUserName,
+                    userRole: currentUserRole
+                });
+
+                currentRoomCode = codeInput;
+                enterWorkspace(codeInput);
+                showToast(`Berhasil bergabung ke ruang ${codeInput}!`);
+            } catch (err) {
+                console.error("Join workspace error:", err);
+                hideLoading();
+                showToast("Terjadi kesalahan saat bergabung ke ruang.", "error");
+            }
+        };
+
+        window.leaveWorkspace = async function() {
+            if (!currentUser) return;
+            closeSettingsModal();
+            showLoading("Keluar dari ruang...");
+            try {
+                if (unsubWorkspace) unsubWorkspace();
+                if (unsubTransactions) unsubTransactions();
+
+                const profileRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'session');
+                await deleteDoc(profileRef);
+                
+                currentRoomCode = null;
+                transactions = [];
+                hideLoading();
+                showOnboarding();
+            } catch (err) {
+                console.error(err);
+                hideLoading();
+            }
+        };
+
+        // --- REAL-TIME LISTENERS ---
+        function enterWorkspace(roomCode) {
+            if (!currentUser) return;
+            document.getElementById('onboarding-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.remove('hidden');
+
+            // 1. Listen to Workspace Config
+            const wsRef = doc(db, 'artifacts', appId, 'public', 'data', `ws_${roomCode}`, 'config');
+            if (unsubWorkspace) unsubWorkspace();
+            unsubWorkspace = onSnapshot(wsRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    workspaceData = { ...workspaceData, ...docSnap.data() };
+                    updateHeaderUI();
+                    renderAllViews();
+                }
+                hideLoading();
+            }, (error) => {
+                console.error("Workspace snapshot error:", error);
+                hideLoading();
+            });
+
+            // 2. Listen to Transactions Collection (Simple query, sorted in memory)
+            const txColRef = collection(db, 'artifacts', appId, 'public', 'data', `ws_${roomCode}_tx`);
+            if (unsubTransactions) unsubTransactions();
+            unsubTransactions = onSnapshot(txColRef, (snapshot) => {
+                const list = [];
+                snapshot.forEach((doc) => {
+                    list.push({ id: doc.id, ...doc.data() });
+                });
+                // Sort newest date first, then createdAt
+                list.sort((a, b) => {
+                    if (b.date !== a.date) return b.date.localeCompare(a.date);
+                    return (b.createdAt || '').localeCompare(a.createdAt || '');
+                });
+                transactions = list;
+                renderAllViews();
+            }, (error) => {
+                console.error("Transactions snapshot error:", error);
+            });
+        }
+
+        // --- UI RENDERING & CALCULATIONS ---
+        function updateHeaderUI() {
+            document.getElementById('header-couple-title').textContent = `${workspaceData.partner1Name} & ${workspaceData.partner2Name}`;
+            document.getElementById('header-room-code').textContent = currentRoomCode;
+            document.getElementById('header-user-name').textContent = currentUserName;
+            document.getElementById('header-user-avatar').textContent = currentUserName.charAt(0).toUpperCase();
+
+            // Countdown calculation
+            const countdownEl = document.getElementById('header-countdown');
+            if (workspaceData.weddingDate) {
+                const target = new Date(workspaceData.weddingDate + 'T00:00:00');
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const diffTime = target - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                const formattedDate = target.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                if (diffDays > 0) {
+                    countdownEl.textContent = `✨ ${diffDays} hari lagi menuju ${formattedDate}`;
+                } else if (diffDays === 0) {
+                    countdownEl.textContent = `🎉 Hari Bahagia! (${formattedDate})`;
+                } else {
+                    countdownEl.textContent = `💕 Terlaksana pada ${formattedDate}`;
+                }
+            } else {
+                countdownEl.textContent = `📅 Tanggal pernikahan belum diatur`;
+            }
+
+            // Populate filter category dropdown
+            const filterCat = document.getElementById('filter-category');
+            const currentVal = filterCat.value;
+            const allCats = [...new Set([...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES])];
+            filterCat.innerHTML = `<option value="all">Semua Kategori</option>` + 
+                allCats.map(c => `<option value="${c}">${c}</option>`).join('');
+            filterCat.value = currentVal || 'all';
+        }
+
+        function renderAllViews() {
+            renderOverview();
+            renderLedger();
+            renderBudgetBreakdown();
+        }
+
+        function renderOverview() {
+            let totalIncome = 0;
+            let incomeCount = 0;
+            let paidExpense = 0; // Status: Lunas or DP
+            let paidCount = 0;
+            let unpaidExpense = 0; // Status: Rencana
+            let unpaidCount = 0;
+
+            let partner1Income = 0;
+            let partner2Income = 0;
+            let jointIncome = 0;
+
+            transactions.forEach(tx => {
+                const amt = Number(tx.amount) || 0;
+                if (tx.type === 'pemasukan') {
+                    totalIncome += amt;
+                    incomeCount++;
+                    if (tx.actor === 'partner1') partner1Income += amt;
+                    else if (tx.actor === 'partner2') partner2Income += amt;
+                    else jointIncome += amt;
+                } else if (tx.type === 'pengeluaran') {
+                    if (tx.status === 'Lunas' || tx.status === 'DP') {
+                        paidExpense += amt;
+                        paidCount++;
+                    } else {
+                        unpaidExpense += amt;
+                        unpaidCount++;
+                    }
+                }
+            });
+
+            // Net cash currently in bank/hand
+            const netCash = totalIncome - paidExpense;
+            // Progress toward target wedding fund: Total Income collected (or net cash + already paid to vendors = totalIncome)
+            // Note: In wedding planning, total money saved/allocated toward the wedding target = totalIncome collected so far!
+            // Because money already paid as DP/Lunas to vendors has already fulfilled part of the wedding budget target.
+            const targetGoal = Number(workspaceData.targetAmount) || 15000000;
+            const progressPct = Math.min(100, Math.round((totalIncome / targetGoal) * 100));
+            const remainingGoal = Math.max(0, targetGoal - totalIncome);
+
+            // Hero Card Updates
+            document.getElementById('metric-total-saved').textContent = formatRupiah(totalIncome);
+            document.getElementById('metric-target-goal').textContent = formatRupiah(targetGoal);
+            document.getElementById('metric-progress-percent').textContent = `${progressPct}%`;
+            document.getElementById('metric-progress-bar').style.width = `${progressPct}%`;
+            document.getElementById('metric-remaining-goal').textContent = remainingGoal > 0 
+                ? `Kurang ${formatRupiah(remainingGoal)} lagi` 
+                : `Target dana pernikahan tercapai!`;
+            document.getElementById('metric-commitment-note').textContent = `Total Komitmen Vendor: ${formatRupiah(paidExpense + unpaidExpense)}`;
+
+            // 4 Metric Cards
+            document.getElementById('card-total-income').textContent = formatRupiah(totalIncome);
+            document.getElementById('card-income-count').textContent = `${incomeCount} kali setoran tabungan`;
+
+            document.getElementById('card-paid-expense').textContent = formatRupiah(paidExpense);
+            document.getElementById('card-paid-count').textContent = `${paidCount} transaksi DP / Lunas`;
+
+            document.getElementById('card-unpaid-expense').textContent = formatRupiah(unpaidExpense);
+            document.getElementById('card-unpaid-count').textContent = `${unpaidCount} pos rencana biaya`;
+
+            const netCashEl = document.getElementById('card-net-cash');
+            netCashEl.textContent = formatRupiah(netCash);
+            netCashEl.className = `font-display text-xl font-extrabold mb-1 ${netCash < 0 ? 'text-pastel-peachDark' : 'text-charcoal'}`;
+
+            // Partner Contribution Bars
+            const p1Pct = totalIncome > 0 ? Math.round((partner1Income / totalIncome) * 100) : 0;
+            const p2Pct = totalIncome > 0 ? Math.round((partner2Income / totalIncome) * 100) : 0;
+            const jointPct = totalIncome > 0 ? Math.round((jointIncome / totalIncome) * 100) : 0;
+
+            document.getElementById('label-partner-1').textContent = workspaceData.partner1Name;
+            document.getElementById('val-partner-1').textContent = `${formatRupiah(partner1Income)} (${p1Pct}%)`;
+            document.getElementById('bar-partner-1').style.width = `${p1Pct}%`;
+
+            document.getElementById('label-partner-2').textContent = workspaceData.partner2Name;
+            document.getElementById('val-partner-2').textContent = `${formatRupiah(partner2Income)} (${p2Pct}%)`;
+            document.getElementById('bar-partner-2').style.width = `${p2Pct}%`;
+
+            document.getElementById('val-partner-joint').textContent = `${formatRupiah(jointIncome)} (${jointPct}%)`;
+            document.getElementById('bar-partner-joint').style.width = `${jointPct}%`;
+
+            // Recent 5 Transactions
+            const recentList = document.getElementById('recent-transactions-list');
+            const recentItems = transactions.slice(0, 5);
+            if (recentItems.length === 0) {
+                recentList.innerHTML = `
+                    <div class="py-10 text-center text-sm text-charcoal-muted">
+                        Belum ada catatan transaksi. Yuk klik <strong>Catat Tabungan</strong> atau <strong>Catat Pengeluaran</strong> untuk memulai! 🐷✨
+                    </div>`;
+            } else {
+                recentList.innerHTML = recentItems.map(tx => {
+                    const isIncome = tx.type === 'pemasukan';
+                    const actorLabel = getActorDisplayName(tx.actor, tx.loggedBy);
+                    return `
+                        <div class="py-3.5 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-10 h-10 rounded-2xl ${isIncome ? 'bg-pastel-mint border border-pastel-mintBorder' : 'bg-pastel-peach border border-pastel-peachBorder'} flex items-center justify-center text-base shrink-0">
+                                    ${isIncome ? '🐷' : '🛍️'}
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-sm font-bold text-charcoal truncate">${escapeHtml(tx.description)}</p>
+                                    <div class="flex items-center gap-2 text-xs text-charcoal-muted">
+                                        <span>${formatDateIndo(tx.date)}</span>
+                                        <span>•</span>
+                                        <span class="truncate font-medium">${escapeHtml(actorLabel)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right shrink-0">
+                                <p class="font-display font-extrabold text-sm ${isIncome ? 'text-pastel-mintDark' : 'text-charcoal'}">
+                                    ${isIncome ? '+' : '-'} ${formatRupiah(tx.amount)}
+                                </p>
+                                ${!isIncome ? renderStatusBadge(tx.status) : '<span class="inline-block px-2 py-0.5 rounded-full bg-pastel-mint text-[11px] text-pastel-mintDark font-bold">Tabungan</span>'}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                lucide.createIcons();
+            }
+        }
+
+        window.renderLedger = function() {
+            const search = document.getElementById('filter-search').value.toLowerCase();
+            const typeFilter = document.getElementById('filter-type').value;
+            const statusFilter = document.getElementById('filter-status').value;
+            const catFilter = document.getElementById('filter-category').value;
+
+            const filtered = transactions.filter(tx => {
+                const matchSearch = (tx.description || '').toLowerCase().includes(search) || 
+                                    (tx.category || '').toLowerCase().includes(search) ||
+                                    (tx.loggedBy || '').toLowerCase().includes(search) ||
+                                    (tx.notes || '').toLowerCase().includes(search);
+                const matchType = typeFilter === 'all' || tx.type === typeFilter;
+                const matchStatus = statusFilter === 'all' || (tx.type === 'pemasukan' && statusFilter === 'Lunas') || tx.status === statusFilter;
+                const matchCat = catFilter === 'all' || tx.category === catFilter;
+                return matchSearch && matchType && matchStatus && matchCat;
+            });
+
+            const tbody = document.getElementById('ledger-table-body');
+            const emptyState = document.getElementById('ledger-empty-state');
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            tbody.innerHTML = filtered.map(tx => {
+                const isIncome = tx.type === 'pemasukan';
+                const actorName = getActorDisplayName(tx.actor, tx.loggedBy);
+                
+                return `
+                    <tr class="hover:bg-cream-100/70 transition-colors group">
+                        <td class="py-3.5 px-4 sm:px-6">
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 rounded-2xl ${isIncome ? 'bg-pastel-mint border border-pastel-mintBorder' : 'bg-pastel-peach border border-pastel-peachBorder'} flex items-center justify-center text-sm shrink-0 mt-0.5">
+                                    ${isIncome ? '🐷' : '🛍️'}
+                                </div>
+                                <div>
+                                    <p class="font-bold text-charcoal">${escapeHtml(tx.description)}</p>
+                                    <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-charcoal-muted mt-0.5">
+                                        <span>${formatDateIndo(tx.date)}</span>
+                                        <span class="md:hidden">• ${escapeHtml(tx.category)}</span>
+                                        <span class="sm:hidden">• ${escapeHtml(actorName)}</span>
+                                    </div>
+                                    ${tx.notes ? `<p class="text-xs text-charcoal-light italic mt-0.5">${escapeHtml(tx.notes)}</p>` : ''}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-3.5 px-4 hidden md:table-cell">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full bg-cream-100 border border-cream-300 text-xs font-semibold text-charcoal-muted">
+                                ${escapeHtml(tx.category)}
+                            </span>
+                        </td>
+                        <td class="py-3.5 px-4 hidden sm:table-cell">
+                            <div class="text-xs">
+                                <p class="font-bold text-charcoal">${escapeHtml(actorName)}</p>
+                                ${tx.loggedBy ? `<p class="text-[11px] text-charcoal-light">Input: ${escapeHtml(tx.loggedBy)}</p>` : ''}
+                            </div>
+                        </td>
+                        <td class="py-3.5 px-4">
+                            ${isIncome 
+                                ? '<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-pastel-mint border border-pastel-mintBorder text-pastel-mintDark">🐷 Tercatat</span>'
+                                : `<button onclick="cycleTransactionStatus('${tx.id}', '${tx.status}')" title="Klik untuk ubah status (Rencana → DP → Lunas)" class="btn-pop hover:opacity-90">${renderStatusBadge(tx.status)}</button>`
+                            }
+                        </td>
+                        <td class="py-3.5 px-4 text-right font-display font-extrabold whitespace-nowrap ${isIncome ? 'text-pastel-mintDark' : 'text-charcoal'}">
+                            ${isIncome ? '+' : '-'} ${formatRupiah(tx.amount)}
+                        </td>
+                        <td class="py-3.5 px-4 sm:px-6 text-right whitespace-nowrap">
+                            <div class="inline-flex items-center gap-1.5">
+                                <button onclick="editTransaction('${tx.id}')" class="p-2 rounded-xl bg-cream-100 text-charcoal-muted hover:text-pastel-lavenderDark hover:bg-pastel-lavender transition-colors" title="Edit">
+                                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="deleteTransaction('${tx.id}')" class="p-2 rounded-xl bg-cream-100 text-charcoal-muted hover:text-pastel-peachDark hover:bg-pastel-peach transition-colors" title="Hapus">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            lucide.createIcons();
+        };
+
+        function renderBudgetBreakdown() {
+            const grid = document.getElementById('budget-categories-grid');
+            const budgets = workspaceData.budgets || {};
+            
+            let totalAllocated = 0;
+            let totalUsedAll = 0;
+
+            const categoryEmojis = {
+                'Katering Rumahan & Kue (50 Tamu)': '🍲',
+                'Mahar & Cincin Nikah': '💍',
+                'Busana Pengantin & MUA': '👗',
+                'Dekorasi Backdrop Rumahan & Tenda': '🌸',
+                'Dokumentasi (Foto & Video)': '📸',
+                'Administrasi KUA & Penghulu': '📜',
+                'Souvenir, Undangan Digital & Lainnya': '💌'
+            };
+
+            const categoryHints = {
+                'Katering Rumahan & Kue (50 Tamu)': '±Rp 75rb/porsi × 50 tamu + snack & buah',
+                'Mahar & Cincin Nikah': 'Cincin pasangan & seperangkat mahar',
+                'Busana Pengantin & MUA': 'Sewa kebaya/jas akad & rias pengantin',
+                'Dekorasi Backdrop Rumahan & Tenda': 'Backdrop ruang tamu, kursi tamu & meja akad',
+                'Dokumentasi (Foto & Video)': 'Paket foto akad & file digital',
+                'Administrasi KUA & Penghulu': 'PNBP nikah luar KUA (Rp 600rb) & berkas',
+                'Souvenir, Undangan Digital & Lainnya': 'Undangan web, 50 souvenir & dana cadangan'
+            };
+
+            const cardsHtml = EXPENSE_CATEGORIES.map(category => {
+                const allocated = Number(budgets[category]) || 0;
+                totalAllocated += allocated;
+
+                let paidAmt = 0;
+                let plannedAmt = 0;
+                transactions.forEach(tx => {
+                    if (tx.type === 'pengeluaran' && tx.category === category) {
+                        const amt = Number(tx.amount) || 0;
+                        if (tx.status === 'Lunas' || tx.status === 'DP') paidAmt += amt;
+                        else plannedAmt += amt;
+                    }
+                });
+
+                const totalCommitted = paidAmt + plannedAmt;
+                totalUsedAll += totalCommitted;
+
+                const pct = allocated > 0 ? Math.round((totalCommitted / allocated) * 100) : (totalCommitted > 0 ? 100 : 0);
+                const isOverBudget = totalCommitted > allocated && allocated > 0;
+                const barWidth = Math.min(100, pct);
+                const barColor = isOverBudget ? 'bg-pastel-peachDark' : (pct > 85 ? 'bg-pastel-butterDark' : 'bg-pastel-mintDark');
+                const emoji = categoryEmojis[category] || '✨';
+                const hint = categoryHints[category] || '';
+
+                return `
+                    <div class="bg-white border-2 ${isOverBudget ? 'border-pastel-peachBorder' : 'border-cream-300'} rounded-[26px] p-5 shadow-soft-pop-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-start justify-between gap-2 mb-3">
+                                <div class="flex items-start gap-2.5">
+                                    <span class="w-9 h-9 rounded-2xl bg-cream-100 border border-cream-300 flex items-center justify-center text-base shrink-0">${emoji}</span>
+                                    <div>
+                                        <h4 class="font-display font-extrabold text-sm text-charcoal">${escapeHtml(category)}</h4>
+                                        ${hint ? `<p class="text-[11px] font-medium text-charcoal-light mt-0.5">${escapeHtml(hint)}</p>` : ''}
+                                        <p class="text-xs text-charcoal-muted mt-1">
+                                            Terbayar: <strong class="text-charcoal">${formatRupiah(paidAmt)}</strong> 
+                                            ${plannedAmt > 0 ? `• Rencana: <span class="font-semibold text-pastel-butterDark">${formatRupiah(plannedAmt)}</span>` : ''}
+                                        </p>
+                                    </div>
+                                </div>
+                                <button onclick="openBudgetEditModal('${category}', ${allocated})" class="btn-pop px-3 py-1.5 rounded-full bg-pastel-lavender hover:bg-[#E2D8FF] text-xs font-bold text-pastel-lavenderDark flex items-center gap-1 shrink-0">
+                                    <i data-lucide="sliders-horizontal" class="w-3 h-3"></i> Pagu
+                                </button>
+                            </div>
+
+                            <div class="w-full h-3.5 bg-cream-100 border border-cream-300 rounded-full overflow-hidden p-0.5 mb-2.5">
+                                <div class="h-full ${barColor} rounded-full transition-all duration-500" style="width: ${barWidth}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs pt-1">
+                            <span class="${isOverBudget ? 'text-pastel-peachDark font-bold' : 'text-charcoal-muted font-medium'}">
+                                ${isOverBudget ? `⚠️ Lewat pagu ${formatRupiah(totalCommitted - allocated)}` : `Sisa pagu: ${formatRupiah(Math.max(0, allocated - totalCommitted))}`}
+                            </span>
+                            <span class="font-display font-extrabold text-charcoal">
+                                ${formatRupiah(allocated)} (${pct}%)
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            grid.innerHTML = cardsHtml;
+            document.getElementById('budget-total-allocated').textContent = formatRupiah(totalAllocated);
+            document.getElementById('budget-total-used').textContent = formatRupiah(totalUsedAll);
+            lucide.createIcons();
+        }
+
+        // --- TRANSACTION CRUD ACTIONS ---
+        window.openTransactionModal = function(type = 'pemasukan', editTx = null) {
+            const modal = document.getElementById('transaction-modal');
+            const form = document.getElementById('transaction-form');
+            form.reset();
+
+            document.getElementById('tx-id').value = editTx ? editTx.id : '';
+            document.getElementById('tx-modal-title').textContent = editTx ? 'Edit Catatan Transaksi' : 'Catat Transaksi Baru';
+            
+            // Populate actor dropdown
+            const actorSelect = document.getElementById('tx-actor');
+            actorSelect.innerHTML = `
+                <option value="partner1">${escapeHtml(workspaceData.partner1Name)}</option>
+                <option value="partner2">${escapeHtml(workspaceData.partner2Name)}</option>
+                <option value="joint">Tabungan / Rekening Bersama</option>
+            `;
+
+            // Default actor based on current logged-in user role
+            if (!editTx) {
+                actorSelect.value = currentUserRole === 'Calon Wanita' ? 'partner2' : 'partner1';
+                document.getElementById('tx-date').value = new Date().toISOString().split('T')[0];
+            }
+
+            setTxType(editTx ? editTx.type : type);
+
+            if (editTx) {
+                document.getElementById('tx-amount').value = formatNumberWithDots(editTx.amount);
+                document.getElementById('tx-desc').value = editTx.description;
+                document.getElementById('tx-category').value = editTx.category;
+                document.getElementById('tx-date').value = editTx.date;
+                document.getElementById('tx-status').value = editTx.status || 'Lunas';
+                document.getElementById('tx-actor').value = editTx.actor || 'partner1';
+                document.getElementById('tx-notes').value = editTx.notes || '';
+            }
+
+            modal.classList.remove('hidden');
+        };
+
+        window.closeTransactionModal = function() {
+            document.getElementById('transaction-modal').classList.add('hidden');
+        };
+
+        window.setTxType = function(type) {
+            activeTxType = type;
+            const btnIn = document.getElementById('btn-type-pemasukan');
+            const btnOut = document.getElementById('btn-type-pengeluaran');
+            const catSelect = document.getElementById('tx-category');
+            const statusWrapper = document.getElementById('tx-status-wrapper');
+            const descLabel = document.getElementById('tx-desc-label');
+            const descInput = document.getElementById('tx-desc');
+            const actorLabel = document.getElementById('tx-actor-label');
+            const submitBtn = document.getElementById('tx-submit-btn');
+
+            if (type === 'pemasukan') {
+                btnIn.className = "py-2.5 rounded-xl text-sm font-extrabold bg-pastel-mint border-2 border-pastel-mintBorder text-pastel-mintDark shadow-soft-pop-sm transition-all flex items-center justify-center gap-1.5";
+                btnOut.className = "py-2.5 rounded-xl text-sm font-bold text-charcoal-muted hover:text-charcoal border-2 border-transparent transition-all flex items-center justify-center gap-1.5";
+                
+                catSelect.innerHTML = INCOME_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('');
+                statusWrapper.classList.add('hidden');
+                descLabel.textContent = "Sumber Tabungan / Keterangan";
+                descInput.placeholder = "Contoh: Tabungan Gaji Bulan Ini atau Bonus";
+                actorLabel.textContent = "Kontribusi Dari";
+                submitBtn.className = "btn-pop px-6 py-2.5 rounded-2xl bg-pastel-mintDark text-white font-display text-sm font-bold shadow-[0_4px_0_#2A7354]";
+            } else {
+                btnOut.className = "py-2.5 rounded-xl text-sm font-extrabold bg-pastel-peach border-2 border-pastel-peachBorder text-pastel-peachDark shadow-soft-pop-sm transition-all flex items-center justify-center gap-1.5";
+                btnIn.className = "py-2.5 rounded-xl text-sm font-bold text-charcoal-muted hover:text-charcoal border-2 border-transparent transition-all flex items-center justify-center gap-1.5";
+                
+                catSelect.innerHTML = EXPENSE_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('');
+                statusWrapper.classList.remove('hidden');
+                descLabel.textContent = "Nama Vendor / Keperluan";
+                descInput.placeholder = "Contoh: DP Catering Melati atau Pelunasan Cincin";
+                actorLabel.textContent = "Dibayar / Dikelola Oleh";
+                submitBtn.className = "btn-pop px-6 py-2.5 rounded-2xl bg-pastel-peachDark text-white font-display text-sm font-bold shadow-[0_4px_0_#B34734]";
+            }
+        };
+
+        window.handleSaveTransaction = async function(e) {
+            e.preventDefault();
+            if (!currentUser || !currentRoomCode) return;
+
+            const id = document.getElementById('tx-id').value;
+            const rawAmount = document.getElementById('tx-amount').value.replace(/\D/g, '');
+            const amount = parseInt(rawAmount, 10) || 0;
+
+            if (amount <= 0) {
+                showToast("Nominal harus lebih dari Rp 0.", "error");
+                return;
+            }
+
+            const payload = {
+                type: activeTxType,
+                amount: amount,
+                description: document.getElementById('tx-desc').value.trim(),
+                category: document.getElementById('tx-category').value,
+                date: document.getElementById('tx-date').value,
+                status: activeTxType === 'pemasukan' ? 'Lunas' : document.getElementById('tx-status').value,
+                actor: document.getElementById('tx-actor').value,
+                notes: document.getElementById('tx-notes').value.trim(),
+                loggedBy: currentUserName,
+                updatedAt: new Date().toISOString()
+            };
+
+            closeTransactionModal();
+
+            try {
+                if (id) {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', `ws_${currentRoomCode}_tx`, id);
+                    await updateDoc(docRef, payload);
+                    showToast("Catatan transaksi diperbarui.");
+                } else {
+                    payload.createdAt = new Date().toISOString();
+                    const colRef = collection(db, 'artifacts', appId, 'public', 'data', `ws_${currentRoomCode}_tx`);
+                    await addDoc(colRef, payload);
+                    showToast(activeTxType === 'pemasukan' ? "Tabungan berhasil dicatat!" : "Pengeluaran berhasil dicatat!");
+                }
+            } catch (err) {
+                console.error("Save tx error:", err);
+                showToast("Gagal menyimpan transaksi.", "error");
+            }
+        };
+
+        window.editTransaction = function(id) {
+            const tx = transactions.find(t => t.id === id);
+            if (tx) openTransactionModal(tx.type, tx);
+        };
+
+        window.deleteTransaction = async function(id) {
+            if (!currentUser || !currentRoomCode) return;
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', `ws_${currentRoomCode}_tx`, id);
+                await deleteDoc(docRef);
+                showToast("Transaksi dihapus.");
+            } catch (err) {
+                console.error("Delete tx error:", err);
+                showToast("Gagal menghapus transaksi.", "error");
+            }
+        };
+
+        window.cycleTransactionStatus = async function(id, currentStatus) {
+            if (!currentUser || !currentRoomCode) return;
+            const order = ['Rencana', 'DP', 'Lunas'];
+            const nextStatus = order[(order.indexOf(currentStatus) + 1) % order.length];
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', `ws_${currentRoomCode}_tx`, id);
+                await updateDoc(docRef, { status: nextStatus });
+                showToast(`Status diubah menjadi: ${nextStatus}`);
+            } catch (err) {
+                console.error("Status toggle error:", err);
+            }
+        };
+
+        // --- SETTINGS & BUDGET ALLOCATION MODALS ---
+        window.openSettingsModal = function() {
+            document.getElementById('set-partner1-name').value = workspaceData.partner1Name;
+            document.getElementById('set-partner2-name').value = workspaceData.partner2Name;
+            document.getElementById('set-target-amount').value = formatNumberWithDots(workspaceData.targetAmount);
+            document.getElementById('set-wedding-date').value = workspaceData.weddingDate || '';
+            document.getElementById('settings-modal').classList.remove('hidden');
+        };
+
+        window.closeSettingsModal = function() {
+            document.getElementById('settings-modal').classList.add('hidden');
+        };
+
+        window.handleSaveSettings = async function(e) {
+            e.preventDefault();
+            if (!currentUser || !currentRoomCode) return;
+
+            const p1 = document.getElementById('set-partner1-name').value.trim() || 'Calon Pria';
+            const p2 = document.getElementById('set-partner2-name').value.trim() || 'Calon Wanita';
+            const rawTarget = document.getElementById('set-target-amount').value.replace(/\D/g, '');
+            const targetAmt = parseInt(rawTarget, 10) || 15000000;
+            const wDate = document.getElementById('set-wedding-date').value;
+
+            closeSettingsModal();
+            try {
+                const wsRef = doc(db, 'artifacts', appId, 'public', 'data', `ws_${currentRoomCode}`, 'config');
+                await updateDoc(wsRef, {
+                    partner1Name: p1,
+                    partner2Name: p2,
+                    targetAmount: targetAmt,
+                    weddingDate: wDate
+                });
+                showToast("Pengaturan pernikahan disimpan.");
+            } catch (err) {
+                console.error("Save settings error:", err);
+                showToast("Gagal menyimpan pengaturan.", "error");
+            }
+        };
+
+        window.applyIntimate15MPreset = async function() {
+            if (!currentUser || !currentRoomCode) return;
+            closeSettingsModal();
+            try {
+                const wsRef = doc(db, 'artifacts', appId, 'public', 'data', `ws_${currentRoomCode}`, 'config');
+                await updateDoc(wsRef, {
+                    targetAmount: 15000000,
+                    budgets: { ...DEFAULT_INTIMATE_BUDGETS }
+                });
+                showToast("Target Rp 15 Juta & alokasi intimate 50 tamu diterapkan!");
+            } catch (err) {
+                console.error("Preset apply error:", err);
+                showToast("Gagal menerapkan preset anggaran.", "error");
+            }
+        };
+
+        window.openBudgetEditModal = function(category, currentAmount) {
+            document.getElementById('edit-budget-category-key').value = category;
+            document.getElementById('edit-budget-category-label').textContent = category;
+            document.getElementById('edit-budget-amount').value = formatNumberWithDots(currentAmount);
+            document.getElementById('budget-edit-modal').classList.remove('hidden');
+        };
+
+        window.closeBudgetEditModal = function() {
+            document.getElementById('budget-edit-modal').classList.add('hidden');
+        };
+
+        window.handleSaveCategoryBudget = async function(e) {
+            e.preventDefault();
+            if (!currentUser || !currentRoomCode) return;
+
+            const catKey = document.getElementById('edit-budget-category-key').value;
+            const rawAmt = document.getElementById('edit-budget-amount').value.replace(/\D/g, '');
+            const newAmt = parseInt(rawAmt, 10) || 0;
+
+            const updatedBudgets = { ...(workspaceData.budgets || {}), [catKey]: newAmt };
+            closeBudgetEditModal();
+
+            try {
+                const wsRef = doc(db, 'artifacts', appId, 'public', 'data', `ws_${currentRoomCode}`, 'config');
+                await updateDoc(wsRef, { budgets: updatedBudgets });
+                showToast(`Pagu anggaran ${catKey} diperbarui.`);
+            } catch (err) {
+                console.error("Update budget error:", err);
+                showToast("Gagal memperbarui pagu anggaran.", "error");
+            }
+        };
+
+        // Profile Switcher (for switching active recorder identity easily)
+        window.openProfileSwitchModal = function() {
+            const container = document.getElementById('profile-switch-options');
+            container.innerHTML = `
+                <button onclick="switchActiveIdentity('${escapeHtml(workspaceData.partner1Name)}', 'Calon Pria')" 
+                    class="btn-pop w-full p-3.5 rounded-2xl border-2 ${currentUserRole === 'Calon Pria' ? 'border-pastel-skyBorder bg-pastel-sky' : 'border-cream-300 hover:bg-cream-100'} flex items-center justify-between text-left transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-2xl bg-white border border-pastel-skyBorder flex items-center justify-center text-base">🤵‍♂️</span>
+                        <div>
+                            <p class="font-display text-sm font-extrabold text-charcoal">${escapeHtml(workspaceData.partner1Name)}</p>
+                            <p class="text-xs font-semibold text-pastel-skyDark">Calon Pria</p>
+                        </div>
+                    </div>
+                    ${currentUserRole === 'Calon Pria' ? '<span class="text-xs font-extrabold text-pastel-skyDark bg-white px-2.5 py-1 rounded-full">Aktif</span>' : ''}
+                </button>
+                <button onclick="switchActiveIdentity('${escapeHtml(workspaceData.partner2Name)}', 'Calon Wanita')" 
+                    class="btn-pop w-full p-3.5 rounded-2xl border-2 ${currentUserRole === 'Calon Wanita' ? 'border-pastel-peachBorder bg-pastel-peach' : 'border-cream-300 hover:bg-cream-100'} flex items-center justify-between text-left transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-2xl bg-white border border-pastel-peachBorder flex items-center justify-center text-base">👰‍♀️</span>
+                        <div>
+                            <p class="font-display text-sm font-extrabold text-charcoal">${escapeHtml(workspaceData.partner2Name)}</p>
+                            <p class="text-xs font-semibold text-pastel-peachDark">Calon Wanita</p>
+                        </div>
+                    </div>
+                    ${currentUserRole === 'Calon Wanita' ? '<span class="text-xs font-extrabold text-pastel-peachDark bg-white px-2.5 py-1 rounded-full">Aktif</span>' : ''}
+                </button>
+            `;
+            lucide.createIcons();
+            document.getElementById('profile-modal').classList.remove('hidden');
+        };
+
+        window.closeProfileSwitchModal = function() {
+            document.getElementById('profile-modal').classList.add('hidden');
+        };
+
+        window.switchActiveIdentity = async function(name, role) {
+            currentUserName = name;
+            currentUserRole = role;
+            updateHeaderUI();
+            closeProfileSwitchModal();
+            showToast(`Pencatat aktif diganti ke ${name}`);
+
+            if (currentUser && currentRoomCode) {
+                const profileRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'session');
+                await setDoc(profileRef, {
+                    roomCode: currentRoomCode,
+                    userName: currentUserName,
+                    userRole: currentUserRole
+                });
+            }
+        };
+
+        // --- TAB NAVIGATION ---
+        window.switchTab = function(tabName) {
+            ['overview', 'ledger', 'budget'].forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+                const tabBtn = document.getElementById(`tab-${t}`);
+                tabBtn.classList.remove('tab-active');
+                tabBtn.classList.add('text-charcoal-muted', 'border-transparent');
+            });
+
+            document.getElementById(`view-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            activeBtn.classList.add('tab-active');
+            activeBtn.classList.remove('text-charcoal-muted', 'border-transparent');
+
+            const headings = {
+                overview: ['Ringkasan Keuangan ✨', 'Pantau progres tabungan dan komitmen pembayaran vendor secara real-time.'],
+                ledger: ['Buku Kas & Transaksi 📒', 'Daftar lengkap seluruh setoran tabungan, DP, dan pelunasan vendor.'],
+                budget: ['Alokasi Pos Anggaran 🍰', 'Kontrol batas anggaran tiap kategori agar persiapan pernikahan tetap sesuai rencana.']
+            };
+            document.getElementById('page-heading').textContent = headings[tabName][0];
+            document.getElementById('page-subheading').textContent = headings[tabName][1];
+        };
+
+        // --- HELPER UTILITIES ---
+        function formatRupiah(num) {
+            const n = Number(num) || 0;
+            const prefix = n < 0 ? '-Rp ' : 'Rp ';
+            return prefix + Math.abs(n).toLocaleString('id-ID');
+        }
+
+        function formatNumberWithDots(num) {
+            const n = Number(num) || 0;
+            return n.toLocaleString('id-ID');
+        }
+
+        window.formatRupiahInput = function(input) {
+            let val = input.value.replace(/\D/g, '');
+            if (!val) {
+                input.value = '';
+                return;
+            }
+            input.value = parseInt(val, 10).toLocaleString('id-ID');
+        };
+
+        function formatDateIndo(dateStr) {
+            if (!dateStr) return '-';
+            const d = new Date(dateStr + 'T00:00:00');
+            return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function getActorDisplayName(actorKey, fallbackName) {
+            if (actorKey === 'partner1') return workspaceData.partner1Name;
+            if (actorKey === 'partner2') return workspaceData.partner2Name;
+            if (actorKey === 'joint') return 'Tabungan Bersama';
+            return fallbackName || 'Pasangan';
+        }
+
+        function renderStatusBadge(status) {
+            if (status === 'Lunas') {
+                return `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-extrabold bg-pastel-mint border border-pastel-mintBorder text-pastel-mintDark">✅ Lunas</span>`;
+            } else if (status === 'DP') {
+                return `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-extrabold bg-pastel-butter border border-pastel-butterBorder text-pastel-butterDark">⏳ DP</span>`;
+            } else {
+                return `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-extrabold bg-pastel-lavender border border-pastel-lavenderBorder text-pastel-lavenderDark">📝 Rencana</span>`;
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        window.copyRoomCode = function() {
+            if (!currentRoomCode) return;
+            const tempInput = document.createElement('input');
+            tempInput.value = currentRoomCode;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast(`Kode Ruang "${currentRoomCode}" disalin! Kirim ke pasangan Anda.`);
+        };
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const styleClass = type === 'error'
+                ? 'bg-pastel-peach border-2 border-pastel-peachBorder text-pastel-peachDark'
+                : 'bg-pastel-mint border-2 border-pastel-mintBorder text-pastel-mintDark';
+            toast.className = `${styleClass} px-4 py-3 rounded-2xl shadow-soft-pop text-xs sm:text-sm font-extrabold flex items-center gap-2 pointer-events-auto transition-all duration-300 translate-y-2 opacity-0`;
+            toast.innerHTML = `
+                <span>${type === 'error' ? '⚠️' : '✨'}</span>
+                <span>${escapeHtml(message)}</span>
+            `;
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        function showLoading(text = "Memuat...") {
+            const el = document.getElementById('loading-overlay');
+            el.querySelector('p').textContent = text;
+            el.classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+        }
+
+        function showOnboarding() {
+            document.getElementById('app-screen').classList.add('hidden');
+            document.getElementById('onboarding-screen').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        // Start App
+        lucide.createIcons();
+        initAuth();
+    </script>
+</body>
+</html>
